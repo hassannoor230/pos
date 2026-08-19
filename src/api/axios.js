@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const baseURL = import.meta.env.VITE_API_URL || '/api';
+const configuredBaseURL = import.meta.env.VITE_API_URL;
+const baseURL = configuredBaseURL ? configuredBaseURL.replace(/\/+$/, '') : '/api';
 
 const axiosInstance = axios.create({
   baseURL,
@@ -16,7 +17,7 @@ axiosInstance.interceptors.request.use(config => {
 axiosInstance.interceptors.response.use(
   res => res,
   err => {
-    if (err.response?.status === 401 && !err.config.url.includes('/auth/login')) {
+    if (err.response?.status === 401 && !err.config?.url?.includes('/auth/login')) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/login';

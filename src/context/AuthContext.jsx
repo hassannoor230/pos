@@ -8,7 +8,9 @@ export const loginThunk = createAsyncThunk('auth/login', async (credentials, { r
     localStorage.setItem('user', JSON.stringify(data.data));
     return data;
   } catch (err) {
-    return rejectWithValue(err.response?.data?.message || 'Login failed');
+    const message = err.response?.data?.message
+      || (err.request ? 'Unable to reach the server. Please try again.' : 'Login failed');
+    return rejectWithValue(message);
   }
 });
 
